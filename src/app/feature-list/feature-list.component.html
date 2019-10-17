@@ -1,0 +1,75 @@
+<div class="container">
+    <div class="row">
+        <div class="col-12 col-centered">
+            <ngb-alert *ngIf="loading; else elseBlock" class="mt-4" type="info" [dismissible]="false">
+                Loading...
+            </ngb-alert>
+            <ng-template #elseBlock>
+                <div class="container mt-3">
+                    <div class="row text-center">
+                        <div class="col-sm">
+
+                        </div>
+                        <div class="col-sm">
+                            <button type="button" class="btn btn-outline-info btn-block" (click)="open(priority)">
+                                Change Priority
+                            </button>
+                        </div>
+                        <div class="col-sm">
+
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="features?.length > 0; else elseBlock" class="table-responsive">
+                    <table class="table table-striped mt-4">
+                        <thead>
+                            <tr>
+                                <th scope="col">Title</th>
+                                <th scope="col">Product Area</th>
+                                <th scope="col">Target Date</th>
+                                <th scope="col">Priority</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let feature of features; let i = index" cdkDrag>
+                                <td>{{feature.title | titlecase}}</td>
+                                <td>{{ productAreas[feature.product_area] }}</td>
+                                <td>{{feature.target_date | date: 'MMM d, y'}}</td>
+                                <td>{{feature.priority + 1}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <ng-template #elseBlock>
+                    <ngb-alert class="mt-2" type="danger" [dismissible]="false">
+                        No Features Found
+                    </ngb-alert>
+                </ng-template>
+            </ng-template>
+        </div>
+    </div>
+</div>
+<ng-template #priority let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Set Feature Priority</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <div class="container mt-2">
+            <div class="row text-center">
+                <div class="col-sm">
+                    <span class="badge badge-warning mb-4">Highest Priority on top</span>
+                    <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+                        <div class="example-box" *ngFor="let feature of features" cdkDrag>{{feature.title}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-success" (click)="changePriorities()">Save</button>
+    </div>
+</ng-template>

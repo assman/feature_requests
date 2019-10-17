@@ -1,0 +1,145 @@
+<div class="container">
+    <div class="row">
+        <div class="col col-centered">
+            <div class="container mt-3">
+                <div class="row text-center">
+                    <div class="col-sm">
+
+                    </div>
+                    <div class="col-sm">
+                        <button type="button" class="btn btn-outline-success btn-block"
+                            (click)="openNewClientModal(newClient)">
+                            <fa-icon [icon]="addIcon"></fa-icon> New Client
+                        </button>
+                    </div>
+                    <div class="col-sm">
+
+                    </div>
+                </div>
+            </div>
+            <ngb-alert *ngIf="loading; else elseBlock" class="mt-4" type="info" [dismissible]="false">
+                Loading...
+            </ngb-alert>
+            <ng-template #elseBlock>
+                <ng-container *ngIf="clients?.length > 0; else elseBlock">
+                    <div *ngFor="let client of clients; let i = index">
+                        <div class="card mt-4 bg-light">
+                            <div class="card-header">
+                                <div class="btn-toolbar justify-content-between">
+                                    <div>
+                                        <h5>{{ client.name | titlecase }}</h5>
+                                    </div>
+                                    <div>
+                                        <div *ngIf="client.features?.length === 0; else elseBlock">
+                                            <button type="button" class="btn btn-primary">
+                                                No Features <span class="badge badge-light"></span>
+                                            </button>
+                                        </div>
+                                        <ng-template #elseBlock>
+                                            <a target="_blank" routerLink="/features"
+                                                [queryParams]="{ client: client.id }" class="btn btn-primary m-1">
+                                                Feature Requests <span
+                                                    class="badge badge-light">{{ client.features.length }}</span>
+                                            </a>
+                                        </ng-template>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text">Lorem Ipsum is simply dummy text of the printing and typesetting
+                                    industry. Lorem Ipsum has been the industry's standard
+                                    dummy text ever since the 1500s, when an unknown printer took a galley of type and
+                                    scrambled it to make a type specimen
+                                    book. It has survived not only five centuries, but also the leap into electronic
+                                    typesetting, remaining essentially
+                                    unchanged. It was popularised in the 1960s with the release of Letraset sheets
+                                    containing Lorem Ipsum passages, and more
+                                    recently with desktop publishing software like Aldus PageMaker including versions of
+                                    Lorem Ipsum.</p>
+                            </div>
+                            <div class="card-footer text-muted text-center">
+                                <button type="button" class="btn btn-success" (click)="open(content, client.id, i)">
+                                    <fa-icon [icon]="addIcon"></fa-icon> New Feature
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+                <ng-template #elseBlock>
+                    <ngb-alert class="m-2" type="danger" [dismissible]="false">
+                        No Clients Found
+                    </ngb-alert>
+                </ng-template>
+            </ng-template>
+        </div>
+    </div>
+</div>
+<ng-template #newClient let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">New Client</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form #newClientForm="ngForm" (ngSubmit)="createClient(newClientForm)">
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="clientName">Client Name</label>
+                <input type="text" class="form-control mb-2" id="clientName" name="clientName" [(ngModel)]="clientName"
+                    placeholder="Minimum length: 3" minlength="3" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button *ngIf="newClientForm.form.invalid" class="btn btn-secondary" disabled=true>Add Client</button>
+            <button *ngIf="newClientForm.form.valid" type="submit" class="btn btn-success" [disabled]="hasSubmitted">Add
+                Client</button>
+        </div>
+    </form>
+</ng-template>
+<ng-template #content let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">New Feature</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <form #newFeature="ngForm" (ngSubmit)="createFeature(newFeature)">
+        <div class="modal-body">
+            <div class="form-group">
+                <label for="featureTitle">Feature Name</label>
+                <input type="text" class="form-control mb-2" id="featureTitle" name="featureTitle"
+                    [(ngModel)]="featureTitle" placeholder="Minimum length: 4" minlength="4" required>
+
+                <label for="featureDescription">Feature Description</label>
+                <textarea type="text" class="form-control mb-2" aria-label="With textarea" id="featureDescription"
+                    name="featureDescription" [(ngModel)]="featureDescription" placeholder="Minimum length: 4"
+                    minlength="4" required></textarea>
+                <label for="exampleFormControlSelect1">Example select</label>
+                <select class="form-control" id="exampleFormControlSelect1" [(ngModel)]="featureArea"
+                    name="featureArea">
+                    <option>Assessments</option>
+                    <option>Billing</option>
+                    <option>Recruit</option>
+                    <option>Reports</option>
+                    <option>None</option>
+                </select>
+                <label for="featureDate">Target Date</label>
+                <div class="input-group">
+                    <input [minDate]="minDate" id="featureDate" class="form-control" placeholder="yyyy-mm-dd" name="dp"
+                        [(ngModel)]="featureDate" ngbDatepicker #dp="ngbDatepicker" required>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" (click)="dp.toggle()" type="button">
+                            <fa-icon [icon]="calendarIcon"></fa-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <div class="modal-footer">
+            <button *ngIf="newFeature.form.invalid" class="btn btn-secondary" disabled=true>Create Feature</button>
+            <button *ngIf="newFeature.form.valid" type="submit" class="btn btn-success" [disabled]="hasSubmitted">Create
+                Feature</button>
+        </div>
+    </form>
+</ng-template>
