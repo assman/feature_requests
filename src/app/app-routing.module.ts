@@ -16,16 +16,6 @@ const routes: Routes = [
     component: FeatureListComponent,
     //pathMatch: 'full'
   },
-  // {
-  //   path: 'signatures/:id',
-  //   component: SignatureDetailViewComponent,
-  //   //pathMatch: 'full'
-  // },
-  // {
-  //   path: ':eventId',
-  //   component: NewSignatureComponent,
-  //   //pathMatch: 'full'
-  // },
   { path: '', component: PageNotFoundComponent },
   { path: '**', component: PageNotFoundComponent },
 ];
